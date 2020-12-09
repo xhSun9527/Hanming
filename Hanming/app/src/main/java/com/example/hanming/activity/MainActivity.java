@@ -22,16 +22,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.hanming.R;
 import com.example.hanming.utils.ImagePHash;
 import com.example.hanming.utils.PermissionUtils;
-import com.example.hanming.R;
 import com.example.hanming.utils.SPUtils;
 
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView tvResult;
     private LinearLayout llContainer;
@@ -61,24 +60,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
         PermissionUtils.checkPermission(this);
-        initView();
     }
 
-    private void initView() {
-        Button btnChoose1 = findViewById(R.id.btnChooseImg1);
-        Button btnChoose2 = findViewById(R.id.btnChooseImg2);
-        Button btnStart = findViewById(R.id.btnStart);
-        tvResult = findViewById(R.id.tvResult);
-        llContainer = findViewById(R.id.imgContainer);
-        img1 = findViewById(R.id.img1);
-        img2 = findViewById(R.id.img2);
+     void initView() {
+         Button btnChoose1 = findViewById(R.id.btnChooseImg1);
+         Button btnChoose2 = findViewById(R.id.btnChooseImg2);
+         Button btnStart = findViewById(R.id.btnStart);
+         tvResult = findViewById(R.id.tvResult);
+         llContainer = findViewById(R.id.imgContainer);
+         img1 = findViewById(R.id.img1);
+         img2 = findViewById(R.id.img2);
 
-        btnChoose1.setOnClickListener(this);
-        btnStart.setOnClickListener(this);
-        btnChoose2.setOnClickListener(this);
+         btnChoose1.setOnClickListener(this);
+         btnStart.setOnClickListener(this);
+         btnChoose2.setOnClickListener(this);
+    }
+
+    @Override
+    void initData() {
+
+    }
+
+    @Override
+    int addContentLayout() {
+        return R.layout.activity_main;
     }
 
     @SuppressLint({"NonConstantResourceId", "SetTextI18n"})
@@ -96,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 openAlbum();
                 break;
             case R.id.btnStart:
-
                 new Thread(() -> {
                     ImagePHash pHash = new ImagePHash();
                     Map<String, Object> resultMap = pHash.startCompare(imgPath1, imgPath2);
@@ -124,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 读取图片路径
      *
-     * @param data
      */
     private void readImage(Intent data) {
         String imagePath = null;
@@ -172,6 +176,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return path;
     }
 
+    /**
+     * 展示图片
+     */
     private void displayImage(String imagePath, ImageView imageView) {
         if (imagePath != null) {
             Bitmap bitImage = BitmapFactory.decodeFile(imagePath);//格式化图片
@@ -184,6 +191,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * 权限申请结果反馈
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -198,7 +208,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
+    /**
+     * 图片选取结果反馈
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -207,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //双击退出程序
     private static final int TIME_EXIT = 2000;
     private long mBackPressed;
 

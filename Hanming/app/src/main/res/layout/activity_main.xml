@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/bg"
     android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
@@ -11,8 +12,13 @@
         android:id="@+id/imgContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/img_container_shape"
         android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:visibility="gone">
 
         <ImageView
@@ -40,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
+            android:background="@drawable/left_btn_shape"
             android:text="选择图片1" />
 
         <Button
@@ -48,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
+            android:background="@drawable/right_btn_shape"
             android:text="选择图片2" />
     </LinearLayout>
 
@@ -59,7 +67,18 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginRight="20dp"
+        android:background="@drawable/button_shape"
         android:text="开始比对" />
+
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/button_shape"
+        android:text="清空数据" />
 
     <TextView
         android:id="@+id/tvResult"
@@ -67,5 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
-        android:layout_marginRight="20dp" />
+        android:layout_marginRight="20dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
 </LinearLayout>

@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -49,6 +51,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 int diff = (int) resultMap.get("diff");
                 float result = (float) resultMap.get("result");
                 long costTime = (long) resultMap.get("time");
+                tvResult.setVisibility(View.VISIBLE);
                 tvResult.setText("不同像素点个数：" + diff + "\n相似度：" + result + "\n总耗时：" + costTime + "ms");
             }
         }
@@ -64,6 +67,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Button btnChoose1 = findViewById(R.id.btnChooseImg1);
         Button btnChoose2 = findViewById(R.id.btnChooseImg2);
         Button btnStart = findViewById(R.id.btnStart);
+        Button btnClear = findViewById(R.id.btnClear);
+
         tvResult = findViewById(R.id.tvResult);
         llContainer = findViewById(R.id.imgContainer);
         img1 = findViewById(R.id.img1);
@@ -72,6 +77,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnChoose1.setOnClickListener(this);
         btnStart.setOnClickListener(this);
         btnChoose2.setOnClickListener(this);
+        btnClear.setOnClickListener(this);
     }
 
     @Override
@@ -99,6 +105,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 ImageDataUtils.openAlbum(this);
                 break;
             case R.id.btnStart:
+                if (TextUtils.isEmpty(imgPath1) || TextUtils.isEmpty(imgPath2)) {
+                    Toast.makeText(this, "尚未选择对比图", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 new Thread(() -> {
                     ImagePHash pHash = new ImagePHash();
                     Map<String, Object> resultMap = pHash.startCompare(imgPath1, imgPath2);
@@ -110,9 +120,38 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }).start();
 
                 break;
+            case R.id.btnClear:
+                clearData();
+                break;
         }
     }
 
+
+    private void clearData() {
+
+        if (TextUtils.isEmpty(imgPath1) || TextUtils.isEmpty(imgPath2)){
+            Toast.makeText(this, "无需清理数据", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Bitmap leftBitmap = ((BitmapDrawable) img1.getDrawable()).getBitmap();
+        Bitmap rightBitmap = ((BitmapDrawable) img2.getDrawable()).getBitmap();
+
+        img1.setImageBitmap(null);
+        if (leftBitmap != null && !leftBitmap.isRecycled()) {
+            leftBitmap.recycle();
+        }
+
+        img2.setImageBitmap(null);
+        if (rightBitmap != null && !rightBitmap.isRecycled()) {
+            rightBitmap.recycle();
+        }
+
+        imgPath1 = null;
+        imgPath2 = null;
+        llContainer.setVisibility(View.GONE);
+        tvResult.setVisibility(View.GONE);
+    }
 
     /**
      * 展示图片
@@ -152,6 +191,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) return;
         if (requestCode == ImageDataUtils.CHOOSE_PHOTO) {
 
             switch (currentImage) {

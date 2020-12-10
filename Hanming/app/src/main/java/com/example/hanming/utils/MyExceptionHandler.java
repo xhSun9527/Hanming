@@ -28,9 +28,6 @@ public class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     /**
      * 获取错误的信息
-     *
-     * @param throwable
-     * @return
      */
     private String getStackTraceInfo(final Throwable throwable) {
         PrintWriter pw = null;
